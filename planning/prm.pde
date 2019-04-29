@@ -2,9 +2,9 @@ import java.util.PriorityQueue;
 import java.util.Comparator;
 import java.util.Stack;
 
-final int MAX_NODES = 7;
+final int MAX_NODES = 70;
 final int MAX_EDGE_LENGTH = 400;
-final int MAX_OBS = 1;
+final int MAX_OBS = 3;
 final int MIN_OBS_RADIUS = 10;
 final int MAX_OBS_RADIUS = 25;
 
@@ -95,17 +95,27 @@ class PRM {
     return true;
   }
   
-  void createAgentPath(int goalId) {
+  void createAgentPath(int goalId, int searchType) {
     Stack<Integer> temp = new Stack<Integer>();
     int id = goalId;
     while (id != -1) {
       temp.push(id);
       id = nodes.get(id).parentId;
-    }
-    while (!temp.empty()) {
-      agent.path.add(temp.pop());
-    }
-  }
+    }// end while
+    if (searchType == 0) {
+      while (!temp.empty()) {
+        agent.dfsPath.add(temp.pop());
+      }// end while
+    } else if (searchType == 1) {
+      while (!temp.empty()) {
+        agent.bfsPath.add(temp.pop());
+      }// end while
+    } else {
+        while (!temp.empty()) {
+          agent.bfsPath.add(temp.pop());
+        }// end while
+      }// end else
+   }// end function
   
   // DISPLAY
   void printNodeInfo() {
@@ -125,9 +135,15 @@ class PRM {
     for (int i = 0; i < nodes.size(); i++) {
       for (int j = 0; j < nodes.get(i).adj.size(); j++) {
         id = nodes.get(i).adj.get(j);
-        if (agent.path.contains(i) && agent.path.contains(id)) {
+        if (agent.dfsPath.contains(i) && agent.dfsPath.contains(id)) {
           strokeWeight(3);
           stroke(0, 180, 0);
+        } else if (agent.bfsPath.contains(i) && agent.bfsPath.contains(id)){
+          strokeWeight(3);
+          stroke(180, 0, 0);
+        } else if (agent.aStarPath.contains(i) && agent.aStarPath.contains(id)){
+          strokeWeight(3);
+          stroke(0, 0, 180);
         } else {
           strokeWeight(1);
           stroke(255, 128);

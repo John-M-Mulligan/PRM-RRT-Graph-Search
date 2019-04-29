@@ -26,10 +26,16 @@ class Entity {
 
 class Agent extends Entity {
   Agent(float x, float y, float r) {
-    path = new ArrayList<Integer>();
+    aStarPath = new ArrayList<Integer>();
+    dfsPath = new ArrayList<Integer>();
+    bfsPath = new ArrayList<Integer>();
     pos = new PVector(x, y);
     radius = r;
   }
   
-  ArrayList<Integer> path;
+  ArrayList<Integer> aStarPath;
+  ArrayList<Integer> dfsPath;
+  ArrayList<Integer> bfsPath;
+
+  
 }

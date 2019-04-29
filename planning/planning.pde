@@ -6,8 +6,9 @@ void setup() {
   
   //prm.aStarSearch();
   prm.dfs(prm.startId);
-  prm.createAgentPath(prm.goalId);
-  println(prm.agent.path);
+  prm.createAgentPath(prm.goalId, 0);
+  prm.aStarSearch();
+  prm.createAgentPath(prm.goalId, 2);
   //prm.printNodeInfo();
 }
 
