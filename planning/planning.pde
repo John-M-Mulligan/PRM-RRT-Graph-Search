@@ -7,9 +7,10 @@ void setup() {
   //prm.aStarSearch();
   prm.dfs(prm.startId);
   prm.createAgentPath(prm.goalId, 0);
+  prm.bfs(prm.startId);
+  prm.createAgentPath(prm.goalId, 1);
   prm.aStarSearch();
   prm.createAgentPath(prm.goalId, 2);
-  //prm.printNodeInfo();
 }
 
 void draw() {

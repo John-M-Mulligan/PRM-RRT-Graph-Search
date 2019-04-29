@@ -1,4 +1,6 @@
 import java.util.PriorityQueue;
+import java.util.LinkedList;
+import java.util.Iterator;
 import java.util.Comparator;
 import java.util.Stack;
 
@@ -41,7 +43,7 @@ class PRM {
     nodes.get(nodes.size()-1).g = 0;
     
     float posX, posY, dist;
-    while(nodes.size() < MAX_NODES - 1) {
+    while(nodes.size() < MAX_NODES - 2) {
       posX = random(sPos.x, gPos.x);
       posY = random(sPos.y, gPos.y);
       for (Entity o : obstacles) {
@@ -112,7 +114,7 @@ class PRM {
       }// end while
     } else {
         while (!temp.empty()) {
-          agent.bfsPath.add(temp.pop());
+          agent.aStarPath.add(temp.pop());
         }// end while
       }// end else
    }// end function
@@ -138,10 +140,10 @@ class PRM {
         if (agent.dfsPath.contains(i) && agent.dfsPath.contains(id)) {
           strokeWeight(3);
           stroke(0, 180, 0);
-        } else if (agent.bfsPath.contains(i) && agent.bfsPath.contains(id)){
-          strokeWeight(3);
-          stroke(180, 0, 0);
-        } else if (agent.aStarPath.contains(i) && agent.aStarPath.contains(id)){
+        } /*else if (agent.bfsPath.contains(i) && agent.bfsPath.contains(id)){
+          strokeWeight(1);
+          stroke(255, 128);
+        } */else if (agent.aStarPath.contains(i) && agent.aStarPath.contains(id)){
           strokeWeight(3);
           stroke(0, 0, 180);
         } else {
@@ -240,6 +242,54 @@ class PRM {
       }
     }
   }
+  
+      // prints BFS traversal from a given source s 
+    void bfs(int currentId) 
+    { 
+        // Mark all the vertices as not visited(By default 
+        // set as false) 
+        boolean visited[] = new boolean[nodes.size()]; 
+  
+        // Create a queue for BFS 
+        LinkedList<Integer> queue = new LinkedList<Integer>(); 
+  
+        // Mark the current node as visited and enqueue it 
+        visited[currentId]=true; 
+        queue.add(currentId); 
+        int parent = -1;
+  
+        while (queue.size() != 0) 
+        { 
+            // Dequeue a vertex from queue and print it
+            
+            currentId = queue.poll(); 
+            nodes.get(currentId).parentId = parent;
+            if (currentId == goalId) {
+              return;
+            }
+            
+            // Get all adjacent vertices of the dequeued vertex s 
+            // If a adjacent has not been visited, then mark it 
+            // visited and enqueue it 
+            for (int i = 0; i < nodes.get(currentId).adj.size(); i++) {
+              if (!visited[nodes.get(currentId).adj.get(i)]) { 
+                    visited[nodes.get(currentId).adj.get(i)] = true; 
+                    queue.add(nodes.get(currentId).adj.get(i)); 
+                } 
+            }
+            
+            /*Iterator<Integer> i = nodes.get(currentId).adj.listIterator(); 
+            while (i.hasNext()) 
+            { 
+                int n = i.next(); 
+                if (!visited[n]) { 
+                    visited[n] = true; 
+                    queue.add(n); 
+                } 
+            }*/
+            parent = currentId;
+        } 
+    } 
   
   PVector sPos;  // starting node position
   PVector gPos;  // goal node position
