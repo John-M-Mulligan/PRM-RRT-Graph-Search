@@ -8,6 +8,7 @@ class Node {
     g = Float.POSITIVE_INFINITY;
     parentId = -1;
     adj = new ArrayList<Integer>();
+    visited = false;
   }
   Node(int i, float x, float y) {
     id = i;
@@ -17,6 +18,7 @@ class Node {
     g = Float.POSITIVE_INFINITY;
     parentId = -1;
     adj = new ArrayList<Integer>();
+    visited = false;
   }
   Node(Node n) {
     id = n.id;
@@ -27,6 +29,7 @@ class Node {
     parentId = n.parentId;
     h = n.h;
     adj = new ArrayList<Integer>(n.adj);
+    visited = false;
   }
   
   float calcNodeDistance(Node n) {
@@ -44,5 +47,6 @@ class Node {
   int id, parentId;
   PVector pos;
   float f, g, h;
+  boolean visited;
   ArrayList<Integer> adj;
 }

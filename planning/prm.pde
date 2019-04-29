@@ -206,6 +206,25 @@ class PRM {
     }
   }
   
+  // Recursive DFS
+  public void dfs(int currentId)
+  {
+    
+    if (currentId == goalId) {
+      return;
+    }
+    
+    Node node = nodes.get(currentId);
+    node.visited=true;
+    for (int i = 0; i < node.adj.size(); i++) {
+      Node n = nodes.get(node.adj.get(i));
+      if(n != null && !n.visited) {
+        n.parentId = currentId;
+        dfs(n.id);
+      }
+    }
+  }
+  
   PVector sPos;  // starting node position
   PVector gPos;  // goal node position
   int startId, goalId;
