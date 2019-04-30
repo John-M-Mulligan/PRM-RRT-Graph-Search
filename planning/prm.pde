@@ -257,7 +257,7 @@ class PRM {
     }
   }
   
-      // prints BFS traversal from a given source s 
+  // prints BFS traversal from a given source s 
   void bfs(int currentId) { 
     // Mark all the vertices as not visited(By default 
     // set as false) 
