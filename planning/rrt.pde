@@ -68,7 +68,9 @@ class RRT {
       nodes.add(new Node(nodes.size(), newPos.x, newPos.y));
       
       // add edge from nearest node to new node
-      nodes.get(minId).adj.add(nodes.get(nodes.size()-1).id);
+      if (validPath(nodes.size()-1, minId)) {
+        nodes.get(minId).adj.add(nodes.get(nodes.size()-1).id);
+      }
     }
     
     // add goal node to the graph
@@ -98,6 +100,53 @@ class RRT {
       obstacles.add(new Entity(random(sPos.x, gPos.x), random(sPos.y, gPos.y), random(MIN_OBS_RADIUS, MAX_OBS_RADIUS)));
     }
   }
+ 
+  // determines if a line crosses through an obstacle or not
+  boolean validPath(int id1, int id2) {
+    if (id1 == id2) {
+      return false;
+    }
+    
+    float dist;
+    float distX = nodes.get(id2).pos.x - nodes.get(id1).pos.x;
+    float distY = nodes.get(id2).pos.y - nodes.get(id1).pos.y;
+    int numSamples = 200;
+    
+    for (Entity o : obstacles) {
+      for (int i = 0; i < numSamples; i++) {
+        dist = dist(
+        nodes.get(id1).pos.x + distX * (float)i/numSamples,
+        nodes.get(id1).pos.y + distY * (float)i/numSamples,
+        o.pos.x, o.pos.y);
+        if (dist < o.radius + agent.radius) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+ 
+  void createAgentPath(int goalId, int searchType) {
+    Stack<Integer> temp = new Stack<Integer>();
+    int id = goalId;
+    while (id != -1) {
+      temp.push(id);
+      id = nodes.get(id).parentId;
+    }// end while
+    if (searchType == 0) {
+      while (!temp.empty()) {
+        agent.dfsPath.add(temp.pop());
+      }// end while
+    } else if (searchType == 1) {
+      while (!temp.empty()) {
+        agent.bfsPath.add(temp.pop());
+      }// end while
+    } else {
+      while (!temp.empty()) {
+        agent.aStarPath.add(temp.pop());
+      }// end while
+    }// end else
+  }// end function 
  
   // DISPLAY
   void printNodeInfo() {
@@ -130,8 +179,17 @@ class RRT {
     }
   }
   
+  void drawObstacles() {
+    for (Entity o : obstacles) {
+      //pushMatrix();
+      noStroke();
+      fill(0, 128, 255);
+      circle(o.pos.x, o.pos.y, o.radius);
+      //popMatrix();
+    }
+  }
+  
   PVector sPos;  // starting node position
- 
   PVector gPos;  // goal node position
   int startId, goalId;
   

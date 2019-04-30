@@ -56,4 +56,5 @@ void draw() {
   //prm.drawGraph();
   //prm.drawObstacles();
   rrt.drawGraph();
+  rrt.drawObstacles();
 }
