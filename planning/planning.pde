@@ -1,4 +1,5 @@
 PRM prm = new PRM();
+RRT rrt = new RRT();
 
 void setup() {
   size(600, 600); 
@@ -52,6 +53,7 @@ void setup() {
 
 void draw() {
   background(25);
-  prm.drawGraph();
-  prm.drawObstacles();
+  //prm.drawGraph();
+  //prm.drawObstacles();
+  rrt.drawGraph();
 }

@@ -25,14 +25,14 @@ class RRT {
     nodes.add(new Node (nodes.size(), sPos.x, sPos.y));
     // start making RRT
     Node rand;
-    float posX = 0, posY = 0, dist, curDist;
+    float posX = 0, posY = 0, dist;
     boolean validNode;
     for (int i = 0; i < ITER; i++) {
       // make random node
       validNode = false;
-      //if (random(0, 1) > 0.95) {
-      //  posX = gPos.x;
-      //  posY = gPos.y;
+      //if (random(0, 1) > 0.98) {
+        //posX = gPos.x;
+        //posY = gPos.y;
       //} else {
         while (!validNode) {
           posX = random(sPos.x+DELTA, gPos.x-DELTA);
@@ -49,6 +49,7 @@ class RRT {
       
       // find node in graph nearest to random node
       int minId = -1;
+      float curDist;
       float minDist = Float.POSITIVE_INFINITY;
       for (Node n : nodes) {
         curDist = dist(n.pos.x, n.pos.y, rand.pos.x, rand.pos.y);
@@ -69,6 +70,27 @@ class RRT {
       // add edge from nearest node to new node
       nodes.get(minId).adj.add(nodes.get(nodes.size()-1).id);
     }
+    
+    // add goal node to the graph
+    nodes.add(new Node(nodes.size(), gPos.x, gPos.y));
+    
+    // set start and goal ID's
+    startId = 0;
+    goalId = nodes.size()-1;
+    
+    // add edge from closest node to goal to the actual goal node
+    float minDist = Float.POSITIVE_INFINITY;
+    float curDist;
+    int minId = -1;
+    for (Node n : nodes) {
+      curDist = dist(n.pos.x, n.pos.y, gPos.x, gPos.y);
+      if (n.id != goalId && curDist < minDist) {
+        minDist = curDist;
+        minId = n.id;
+      }      
+    }
+    println(minId);
+    nodes.get(minId).adj.add(goalId);
   }
   
   void createObstacles() {
@@ -95,13 +117,13 @@ class RRT {
     for (int i = 0; i < nodes.size(); i++) {
       for (int j = 0; j < nodes.get(i).adj.size(); j++) {
         id = nodes.get(i).adj.get(j);
-        if (agent.path.contains(i) && agent.path.contains(id)) {
+        /*if (agent.path.contains(i) && agent.path.contains(id)) {
           strokeWeight(3);
           stroke(0, 180, 0);
-        } else {
+        } else {*/
           strokeWeight(1);
           stroke(255, 128);
-        }
+        //}
         line(nodes.get(i).pos.x, nodes.get(i).pos.y,
           nodes.get(id).pos.x, nodes.get(id).pos.y);
       }
