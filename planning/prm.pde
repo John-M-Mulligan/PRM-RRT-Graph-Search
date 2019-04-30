@@ -169,64 +169,6 @@ class PRM {
   }
   
   // SEARCH
-  /*void aStarSearch() {
-    // initalize open and closed list
-    ArrayList<Node> closedList = new ArrayList<Node>();
-    PriorityQueue<Node> openList = new PriorityQueue<Node>( 
-      new Comparator<Node>(){
-      //override compare method
-        public int compare(Node i, Node j){
-          if(i.f < j.f){
-            return -1;
-          } else if (i.f > j.f) {
-            return 1;
-          } else { 
-            return 0;
-          }
-        }
-      });
-  
-    // place the starting node into open, with inital cost of 0
-    nodes.get(startId).f = 0;
-    openList.add(nodes.get(startId));
-    boolean found = false;
-    
-    while (!openList.isEmpty()&&(!found)) {
-      // grab the node with the smallest f value
-      Node current = openList.poll();
-      
-      if (current.id == goalId) {
-          found = true;
-      }
-      
-      // add the expanded node to the closed list
-      closedList.add(current);
-      
-      // for each neighbor of the current node
-      for (Integer i : current.adj) {
-        Node neighbor = nodes.get(i);
-        if (closedList.contains(neighbor)) {
-          continue;  // ignore neighbor that has already been expanded
-        }
-        
-        // calculate the g value for each neighbor
-        float temp_g = current.g + current.calcNodeDistance(neighbor);
-        
-        // if the neighbor is not in the open set
-        if (!openList.contains(neighbor)) {
-          openList.add(neighbor);
-        } else if (temp_g >= neighbor.g) {
-          continue;
-        }
-        
-        // record the best path, parent ID and g/f values
-        neighbor.parentId = current.id;
-        neighbor.g = temp_g;
-        neighbor.calcF(nodes.get(goalId));
-      }
-    }
-  }*/
-  
  public void aStarSearch(){
         Set<Node> explored = new HashSet<Node>();
         PriorityQueue<Node> queue = new PriorityQueue<Node>(20, 
