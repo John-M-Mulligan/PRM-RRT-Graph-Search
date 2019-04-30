@@ -1,10 +1,12 @@
 import java.util.PriorityQueue;
 import java.util.LinkedList;
 import java.util.Iterator;
+import java.util.Set;
+import java.util.HashSet;
 import java.util.Comparator;
 import java.util.Stack;
 
-final int MAX_NODES = 70;
+final int MAX_NODES = 150;
 final int MAX_EDGE_LENGTH = 400;
 final int MAX_OBS = 3;
 final int MIN_OBS_RADIUS = 10;
@@ -167,17 +169,17 @@ class PRM {
   }
   
   // SEARCH
-  void aStarSearch() {
+  /*void aStarSearch() {
     // initalize open and closed list
     ArrayList<Node> closedList = new ArrayList<Node>();
     PriorityQueue<Node> openList = new PriorityQueue<Node>( 
       new Comparator<Node>(){
       //override compare method
         public int compare(Node i, Node j){
-          if(i.f > j.f){
-            return 1;
-          } else if (i.f < j.f) {
+          if(i.f < j.f){
             return -1;
+          } else if (i.f > j.f) {
+            return 1;
           } else { 
             return 0;
           }
@@ -187,13 +189,14 @@ class PRM {
     // place the starting node into open, with inital cost of 0
     nodes.get(startId).f = 0;
     openList.add(nodes.get(startId));
+    boolean found = false;
     
-    while (!openList.isEmpty()) {
+    while (!openList.isEmpty()&&(!found)) {
       // grab the node with the smallest f value
       Node current = openList.poll();
       
       if (current.id == goalId) {
-        return;
+          found = true;
       }
       
       // add the expanded node to the closed list
@@ -222,7 +225,77 @@ class PRM {
         neighbor.calcF(nodes.get(goalId));
       }
     }
-  }
+  }*/
+  
+ public void aStarSearch(){
+        Set<Node> explored = new HashSet<Node>();
+        PriorityQueue<Node> queue = new PriorityQueue<Node>(20, 
+                new Comparator<Node>(){
+                         //override compare method
+                 public int compare(Node i, Node j){
+                    if(i.f > j.f){
+                        return 1;
+                    } else if (i.f < j.f){
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                 }
+                }
+        );
+
+        //cost from start
+        nodes.get(startId).g = 0;
+        queue.add(nodes.get(startId));
+        boolean found = false;
+
+        while((!queue.isEmpty()) && (!found)){
+
+                //the node in having the lowest f_score value
+                Node current = queue.poll();
+
+                explored.add(current);
+
+                //goal found
+                if(current.id == goalId){
+                        found = true;
+                }
+
+                //check every child of current node
+                for(int e : current.adj){                        
+                        Node child = nodes.get(e);
+                        float cost = dist(current.pos.x, current.pos.y, child.pos.x, child.pos.y);
+                        float temp_g_scores = current.g + cost;
+                        float temp_f_scores = temp_g_scores + child.h;
+
+
+                        /*if child node has been evaluated and 
+                        the newer f_score is higher, skip*/
+                        
+                        if((explored.contains(child)) && 
+                                (temp_f_scores >= child.f)){
+                                continue;
+                        }
+
+                        /*else if child node is not in queue or 
+                        newer f_score is lower*/
+                        
+                        else if((!queue.contains(child)) || 
+                                (temp_f_scores < child.f)){
+
+                                child.parentId = current.id;
+                                child.g = temp_g_scores;
+                                child.f = temp_f_scores;
+
+                                if(queue.contains(child)) {
+                                        queue.remove(child);
+                                } // end if
+                                queue.add(child);
+                        }// end else if
+                } // end for
+        } // end while
+} // end A star    
+
   
   // Recursive DFS
   public void dfs(int currentId)
