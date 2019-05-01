@@ -6,12 +6,6 @@ import java.util.HashSet;
 import java.util.Comparator;
 import java.util.Stack;
 
-final int MAX_NODES = 150;
-final int MAX_EDGE_LENGTH = 400;
-final int MAX_OBS = 3;
-final int MIN_OBS_RADIUS = 10;
-final int MAX_OBS_RADIUS = 25;
-
 class PRM {
   PRM() {
     // Initialize nodes and specify start/goal positions

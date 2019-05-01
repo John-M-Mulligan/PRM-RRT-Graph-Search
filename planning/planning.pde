@@ -4,6 +4,7 @@ RRT rrt = new RRT();
 void setup() {
   size(600, 600); 
   
+  /*
   // Run and time dfs path
   long startTime = System.nanoTime();
   prm.dfs(prm.startId);
@@ -48,7 +49,57 @@ void setup() {
          prm.nodes.get(prm.agent.aStarPath.get(i)).pos.x, prm.nodes.get(prm.agent.aStarPath.get(i)).pos.y);
   }
   println("A* Path length: ", pathLength);
+  */
   
+  // Run and time dfs path
+  long startTime = System.nanoTime();
+  rrt.dfs(rrt.startId);
+  long endTime = System.nanoTime();
+  rrt.createAgentPath(rrt.goalId, 0);
+  println("DFS run-time: ", (float)((float)(endTime - startTime) / 1000000), "ms");
+  
+  
+  // Run and time bfs path
+  startTime = System.nanoTime();
+  rrt.bfs(rrt.startId);
+  endTime = System.nanoTime();
+  rrt.createAgentPath(rrt.goalId, 1);
+  println("BFS run-time: ", (float)((float)(endTime - startTime) / 1000000), "ms");
+  
+  // Run and time a* path
+  startTime = System.nanoTime();
+  rrt.aStarSearch();
+  endTime = System.nanoTime();
+  rrt.createAgentPath(rrt.goalId, 2);
+  println("A* run-time: ", (float)((float)(endTime - startTime) / 1000000), "ms");
+
+  // Calculate length of dfs path
+  float pathLength = 0;
+  for (int i = 1; i < rrt.agent.dfsPath.size(); i++) {
+    pathLength += dist(rrt.nodes.get(rrt.agent.dfsPath.get(i - 1)).pos.x, rrt.nodes.get(rrt.agent.dfsPath.get(i - 1)).pos.y, 
+         rrt.nodes.get(rrt.agent.dfsPath.get(i)).pos.x, rrt.nodes.get(rrt.agent.dfsPath.get(i)).pos.y);
+  }
+  println("DFS Path length: ", pathLength);
+  
+  // Calculate length of bfs path
+  pathLength = 0;
+  for (int i = 1; i < rrt.agent.bfsPath.size(); i++) {
+    pathLength += dist(rrt.nodes.get(rrt.agent.bfsPath.get(i - 1)).pos.x, rrt.nodes.get(rrt.agent.bfsPath.get(i - 1)).pos.y, 
+         rrt.nodes.get(rrt.agent.bfsPath.get(i)).pos.x, rrt.nodes.get(rrt.agent.bfsPath.get(i)).pos.y);
+  }
+  println("BFS Path length: ", pathLength);
+
+  // Calculate length of aStar path
+  pathLength = 0;
+  for (int i = 1; i < rrt.agent.aStarPath.size(); i++) {
+    pathLength += dist(rrt.nodes.get(rrt.agent.aStarPath.get(i - 1)).pos.x, rrt.nodes.get(rrt.agent.aStarPath.get(i - 1)).pos.y, 
+         rrt.nodes.get(rrt.agent.aStarPath.get(i)).pos.x, rrt.nodes.get(rrt.agent.aStarPath.get(i)).pos.y);
+  }
+  println("A* Path length: ", pathLength);
+  
+  
+  // rrt.printNodeInfo();
+  // println(rrt.agent.aStarPath);
 }
 
 void draw() {

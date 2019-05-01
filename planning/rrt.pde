@@ -1,11 +1,3 @@
-//final int MAX_NODES = 7;
-//final int MAX_EDGE_LENGTH = 40000;
-//final int MAX_OBS = 1;
-//final int MIN_OBS_RADIUS = 10;
-//final int MAX_OBS_RADIUS = 25;
-final int DELTA = 50;
-final int ITER = 100;
-
 class RRT {
   RRT() {
     // Initialize nodes and specify start/goal positions
@@ -22,7 +14,7 @@ class RRT {
     
     // create starting node
     nodes = new ArrayList<Node>();
-    nodes.add(new Node (nodes.size(), sPos.x, sPos.y));
+    nodes.add(new Node (nodes.size(), 325, 325));
     // start making RRT
     Node rand;
     float posX = 0, posY = 0, dist;
@@ -30,7 +22,7 @@ class RRT {
     for (int i = 0; i < ITER; i++) {
       // make random node
       validNode = false;
-      //if (random(0, 1) > 0.98) {
+      //if (random(0, 1) > 0.8) {
         //posX = gPos.x;
         //posY = gPos.y;
       //} else {
@@ -80,6 +72,8 @@ class RRT {
     startId = 0;
     goalId = nodes.size()-1;
     
+    //createEdges();
+    
     // add edge from closest node to goal to the actual goal node
     float minDist = Float.POSITIVE_INFINITY;
     float curDist;
@@ -91,13 +85,23 @@ class RRT {
         minId = n.id;
       }      
     }
-    println(minId);
     nodes.get(minId).adj.add(goalId);
   }
   
   void createObstacles() {
     while(obstacles.size() < MAX_OBS) {
       obstacles.add(new Entity(random(sPos.x, gPos.x), random(sPos.y, gPos.y), random(MIN_OBS_RADIUS, MAX_OBS_RADIUS)));
+    }
+  }
+  
+  void createEdges() {
+    for (int i = 0; i < nodes.size(); i++) {
+      for (int j = 0; j < nodes.size(); j++) {
+        float dist = nodes.get(i).calcNodeDistance(nodes.get(j));
+        if (i != j && dist < MAX_EDGE_LENGTH && validPath(i, j)) {
+          nodes.get(i).adj.add(j);
+        }
+      }
     }
   }
  
@@ -166,13 +170,19 @@ class RRT {
     for (int i = 0; i < nodes.size(); i++) {
       for (int j = 0; j < nodes.get(i).adj.size(); j++) {
         id = nodes.get(i).adj.get(j);
-        /*if (agent.path.contains(i) && agent.path.contains(id)) {
+        if (agent.dfsPath.contains(i) && agent.dfsPath.contains(id)) {
           strokeWeight(3);
           stroke(0, 180, 0);
-        } else {*/
+        } /*else if (agent.bfsPath.contains(i) && agent.bfsPath.contains(id)){
           strokeWeight(1);
           stroke(255, 128);
-        //}
+        } */else if (agent.aStarPath.contains(i) && agent.aStarPath.contains(id)){
+          strokeWeight(3);
+          stroke(0, 0, 180);
+        } else {
+          strokeWeight(1);
+          stroke(255, 128);
+        }
         line(nodes.get(i).pos.x, nodes.get(i).pos.y,
           nodes.get(id).pos.x, nodes.get(id).pos.y);
       }
@@ -188,6 +198,132 @@ class RRT {
       //popMatrix();
     }
   }
+  
+  // SEARCH
+ public void aStarSearch(){
+    Set<Node> explored = new HashSet<Node>();
+    PriorityQueue<Node> queue = new PriorityQueue<Node>(20, 
+            new Comparator<Node>() {
+              //override compare method
+             public int compare(Node i, Node j){
+                if(i.f > j.f){
+                    return 1;
+                } else if (i.f < j.f){
+                    return -1;
+                } else {
+                    return 0;
+                } // end else
+             } // end compare
+            } // end comparator
+    );
+  
+    //cost from start
+    nodes.get(startId).g = 0;
+    queue.add(nodes.get(startId));
+    boolean found = false;
+  
+    while((!queue.isEmpty()) && (!found)){
+  
+            //the node in having the lowest f_score value
+            Node current = queue.poll();
+  
+            explored.add(current);
+  
+            //goal found
+            if(current.id == goalId){
+                    found = true;
+            } // end if
+  
+            //check every child of current node
+            for(int e : current.adj){                        
+                    Node child = nodes.get(e);
+                    float cost = dist(current.pos.x, current.pos.y, child.pos.x, child.pos.y);
+                    float temp_g_scores = current.g + cost;
+                    float temp_f_scores = temp_g_scores + child.h;
+  
+  
+                    /*if child node has been evaluated and 
+                    the newer f_score is higher, skip*/
+                    
+                    if((explored.contains(child)) && 
+                            (temp_f_scores >= child.f)){
+                            continue;
+                    } // end if
+  
+                    /*else if child node is not in queue or 
+                    newer f_score is lower*/
+                    
+                    else if((!queue.contains(child)) || 
+                            (temp_f_scores < child.f)){
+  
+                            child.parentId = current.id;
+                            child.g = temp_g_scores;
+                            child.f = temp_f_scores;
+  
+                            if(queue.contains(child)) {
+                                    queue.remove(child);
+                            } // end if
+                            queue.add(child);
+                    }// end else if
+            } // end for
+    } // end while
+} // end A star    
+
+  
+  // Recursive DFS
+  public void dfs(int currentId) {
+    
+    if (currentId == goalId) {
+      return;
+    }
+    
+    Node node = nodes.get(currentId);
+    node.visited=true;
+    for (int i = 0; i < node.adj.size(); i++) {
+      Node n = nodes.get(node.adj.get(i));
+      if(n != null && !n.visited) {
+        n.parentId = currentId;
+        dfs(n.id);
+      }
+    }
+  }
+  
+  // prints BFS traversal from a given source s 
+  void bfs(int currentId) { 
+    // Mark all the vertices as not visited(By default 
+    // set as false) 
+    boolean visited[] = new boolean[nodes.size()]; 
+
+    // Create a queue for BFS 
+    LinkedList<Integer> queue = new LinkedList<Integer>(); 
+
+    // Mark the current node as visited and enqueue it 
+    visited[currentId]=true; 
+    queue.add(currentId); 
+    int parent = -1;
+
+    while (queue.size() != 0) 
+    { 
+        // Dequeue a vertex from queue and print it
+        
+        currentId = queue.poll(); 
+        nodes.get(currentId).parentId = parent;
+        if (currentId == goalId) {
+          return;
+        }
+        
+        // Get all adjacent vertices of the dequeued vertex s 
+        // If a adjacent has not been visited, then mark it 
+        // visited and enqueue it 
+        for (int i = 0; i < nodes.get(currentId).adj.size(); i++) {
+          if (!visited[nodes.get(currentId).adj.get(i)]) { 
+            visited[nodes.get(currentId).adj.get(i)] = true; 
+            queue.add(nodes.get(currentId).adj.get(i)); 
+          } 
+        }
+        parent = currentId;
+    } 
+  } 
   
   PVector sPos;  // starting node position
   PVector gPos;  // goal node position
