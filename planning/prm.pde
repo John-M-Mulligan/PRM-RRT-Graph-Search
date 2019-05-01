@@ -8,6 +8,8 @@ import java.util.Stack;
 
 class PRM {
   PRM() {
+    //println("Making PRM");
+    
     // Initialize nodes and specify start/goal positions
     nodes = new ArrayList<Node>();
     sPos = new PVector(50, 50);

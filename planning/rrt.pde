@@ -1,5 +1,7 @@
 class RRT {
   RRT() {
+    //println("Making RRT");
+    
     // Initialize nodes and specify start/goal positions
     nodes = new ArrayList<Node>();
     sPos = new PVector(50, 50);
@@ -14,7 +16,7 @@ class RRT {
     
     // create starting node
     nodes = new ArrayList<Node>();
-    nodes.add(new Node (nodes.size(), 325, 325));
+    nodes.add(new Node (nodes.size(), sPos.x, sPos.y));
     // start making RRT
     Node rand;
     float posX = 0, posY = 0, dist;
