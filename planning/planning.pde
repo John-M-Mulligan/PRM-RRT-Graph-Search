@@ -1,8 +1,14 @@
+ArrayList obstacles = new ArrayList<Entity>();
 PRM prm;
 RRT rrt;
 
 void setup() {
-  size(600, 600); 
+  size(600, 600);
+  
+  // Creating a list of obstacles to be used for both PRM and RRT
+  while(obstacles.size() < MAX_OBS) {
+    obstacles.add(new Entity(random(SPOS_X, GPOS_X), random(SPOS_Y, GPOS_Y), random(MIN_OBS_RADIUS, MAX_OBS_RADIUS)));
+  }
   
   ArrayList dfsAvgPathLength = new ArrayList<Float>();
   ArrayList bfsAvgPathLength = new ArrayList<Float>();
@@ -32,8 +38,8 @@ void setup() {
   float pathLength = 0;
   long startTime, endTime;
   
-  /*for (int j = 0; j < NUM_ITERATIONS; j++) {
-      prm = new PRM();
+  for (int j = 0; j < NUM_ITERATIONS; j++) {
+      prm = new PRM(obstacles);
     
       // Run and time dfs path
       startTime = System.nanoTime();
@@ -102,7 +108,7 @@ void setup() {
   println("PRM Avg DFS Runtime: ", dfsRuntime/NUM_ITERATIONS);
   println("PRM Avg BFS Runtime: ", bfsRuntime/NUM_ITERATIONS);
   println("PRM Avg A Star Runtime: ", aStarRuntime/NUM_ITERATIONS);
-  println();*/
+  println();
   
   /***********************************************************************/
   // RRT
@@ -125,7 +131,7 @@ void setup() {
   aStarRuntime = 0;
   
     for (int j = 0; j < NUM_ITERATIONS; j++) {
-      rrt = new RRT();
+      rrt = new RRT(obstacles);
     
       // Run and time dfs path
       startTime = System.nanoTime();
@@ -160,15 +166,15 @@ void setup() {
       // Calculate length of bfs path
       pathLength = 0;
       for (int i = 1; i < rrt.agent.bfsPath.size(); i++) {
-        println(pathLength);
+        //println(pathLength);
         pathLength += dist(rrt.nodes.get(rrt.agent.bfsPath.get(i - 1)).pos.x, rrt.nodes.get(rrt.agent.bfsPath.get(i - 1)).pos.y, 
              rrt.nodes.get(rrt.agent.bfsPath.get(i)).pos.x, rrt.nodes.get(rrt.agent.bfsPath.get(i)).pos.y);
       }
-      println(rrt.agent.bfsPath);
-      println(rrt.agent.dfsPath);
-      println(pathLength);
+      //println(rrt.agent.bfsPath);
+      //println(rrt.agent.dfsPath);
+      //println(pathLength);
       bfsAvgPathLength.add(pathLength);
-      rrt.printNodeInfo();
+      //rrt.printNodeInfo();
       
       // Calculate length of aStar path
       pathLength = 0;

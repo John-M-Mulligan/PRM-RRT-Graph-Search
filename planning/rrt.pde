@@ -1,22 +1,18 @@
 class RRT {
-  RRT() {
-    //println("Making RRT");
-    
+  RRT(ArrayList<Entity> o) {
     // Initialize nodes and specify start/goal positions
     nodes = new ArrayList<Node>();
-    sPos = new PVector(50, 50);
-    gPos = new PVector(550, 550);
     
     // Initialize agent properties
-    agent = new Agent(sPos.x, sPos.y, 12.5);
+    agent = new Agent(SPOS_X, SPOS_Y, AGENT_RADIUS);
     
     // Create obstacles
     obstacles = new ArrayList<Entity>();
-    createObstacles();
+    obstacles.addAll(o);
     
     // create starting node
     nodes = new ArrayList<Node>();
-    nodes.add(new Node (nodes.size(), sPos.x, sPos.y));
+    nodes.add(new Node (nodes.size(), SPOS_X, SPOS_Y));
     // start making RRT
     Node rand;
     float posX = 0, posY = 0, dist;
@@ -25,12 +21,12 @@ class RRT {
       // make random node
       validNode = false;
       //if (random(0, 1) > 0.8) {
-        //posX = gPos.x;
-        //posY = gPos.y;
+        //posX = GPOS_X;
+        //posY = GPOS_Y;
       //} else {
         while (!validNode) {
-          posX = random(sPos.x+DELTA, gPos.x-DELTA);
-          posY = random(sPos.y+DELTA, gPos.y-DELTA);
+          posX = random(SPOS_X+DELTA, GPOS_X-DELTA);
+          posY = random(SPOS_Y+DELTA, GPOS_Y-DELTA);
           for (int j = 0; !validNode && j < obstacles.size(); j++) {
             dist = dist(posX, posY, obstacles.get(j).pos.x, obstacles.get(j).pos.y);
             if (dist > obstacles.get(j).radius + agent.radius) {
@@ -68,7 +64,7 @@ class RRT {
     }
     
     // add goal node to the graph
-    nodes.add(new Node(nodes.size(), gPos.x, gPos.y));
+    nodes.add(new Node(nodes.size(), GPOS_X, GPOS_Y));
     
     // set start and goal ID's
     startId = 0;
@@ -81,19 +77,13 @@ class RRT {
     float curDist;
     int minId = -1;
     for (Node n : nodes) {
-      curDist = dist(n.pos.x, n.pos.y, gPos.x, gPos.y);
+      curDist = dist(n.pos.x, n.pos.y, GPOS_X, GPOS_Y);
       if (n.id != goalId && curDist < minDist) {
         minDist = curDist;
         minId = n.id;
       }      
     }
     nodes.get(minId).adj.add(goalId);
-  }
-  
-  void createObstacles() {
-    while(obstacles.size() < MAX_OBS) {
-      obstacles.add(new Entity(random(sPos.x, gPos.x), random(sPos.y, gPos.y), random(MIN_OBS_RADIUS, MAX_OBS_RADIUS)));
-    }
   }
   
   void createEdges() {
@@ -327,8 +317,6 @@ class RRT {
     } 
   } 
   
-  PVector sPos;  // starting node position
-  PVector gPos;  // goal node position
   int startId, goalId;
   
   Agent agent;
