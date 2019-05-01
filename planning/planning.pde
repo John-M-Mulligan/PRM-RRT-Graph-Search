@@ -1,8 +1,17 @@
-PRM prm = new PRM();
-RRT rrt = new RRT();
+ArrayList obstacles = new ArrayList<Entity>();
+PRM prm;
+RRT rrt;
 
 void setup() {
-  size(600, 600); 
+  size(600, 600);
+  
+  // Creating a list of obstacles to be used for both PRM and RRT
+  while(obstacles.size() < MAX_OBS) {
+    obstacles.add(new Entity(random(SPOS_X, GPOS_X), random(SPOS_Y, GPOS_Y), random(MIN_OBS_RADIUS, MAX_OBS_RADIUS)));
+  }
+  
+  prm = new PRM(obstacles);
+  rrt = new RRT(obstacles);
   
   /*
   // Run and time dfs path

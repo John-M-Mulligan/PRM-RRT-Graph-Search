@@ -7,18 +7,16 @@ import java.util.Comparator;
 import java.util.Stack;
 
 class PRM {
-  PRM() {
+  PRM(ArrayList<Entity> o) {
     // Initialize nodes and specify start/goal positions
     nodes = new ArrayList<Node>();
-    sPos = new PVector(50, 50);
-    gPos = new PVector(550, 550);
     
     // Initialize agent properties
-    agent = new Agent(sPos.x, sPos.y, 12.5);
+    agent = new Agent(SPOS_X, SPOS_Y, AGENT_RADIUS);
     
     // Create obstacles
     obstacles = new ArrayList<Entity>();
-    createObstacles();
+    obstacles.addAll(o);
     
     // Create the PRM in 2 steps:
     // 1) Create nodes in random (but valid) locations
@@ -27,21 +25,15 @@ class PRM {
     createEdges();
   }
   
-  void createObstacles() {
-    while(obstacles.size() < MAX_OBS) {
-      obstacles.add(new Entity(random(sPos.x, gPos.x), random(sPos.y, gPos.y), random(MIN_OBS_RADIUS, MAX_OBS_RADIUS)));
-    }
-  }
-  
   void createNodes() {
     // add starting position to the node list
-    nodes.add(new Node(nodes.size(), sPos.x, sPos.y));
+    nodes.add(new Node(nodes.size(), SPOS_X, SPOS_Y));
     nodes.get(nodes.size()-1).g = 0;
     
     float posX, posY, dist;
     while(nodes.size() < MAX_NODES - 2) {
-      posX = random(sPos.x, gPos.x);
-      posY = random(sPos.y, gPos.y);
+      posX = random(SPOS_X, GPOS_X);
+      posY = random(SPOS_Y, GPOS_Y);
       for (Entity o : obstacles) {
         dist = dist(posX, posY, o.pos.x, o.pos.y);
         if (dist > o.radius + agent.radius) {
@@ -51,7 +43,7 @@ class PRM {
     }
     
     // add goal position to the node list
-    nodes.add(new Node(nodes.size(), gPos.x, gPos.y));
+    nodes.add(new Node(nodes.size(), GPOS_X, GPOS_Y));
    
     startId = 0;
     goalId = nodes.size()-1;
@@ -288,8 +280,6 @@ class PRM {
     } 
   } 
   
-  PVector sPos;  // starting node position
-  PVector gPos;  // goal node position
   int startId, goalId;
   
   Agent agent;
