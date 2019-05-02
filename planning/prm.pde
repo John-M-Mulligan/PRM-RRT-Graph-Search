@@ -31,7 +31,7 @@ class PRM {
     nodes.get(nodes.size()-1).g = 0;
     
     float posX, posY, dist;
-    while(nodes.size() < MAX_NODES - 2) {
+    while(nodes.size() < MAX_NODES - 1) {
       posX = random(SPOS_X, GPOS_X);
       posY = random(SPOS_Y, GPOS_Y);
       for (Entity o : obstacles) {
@@ -108,7 +108,7 @@ class PRM {
     } else {
       while (!temp.empty()) {
         agent.ucPath.add(temp.pop());
-      }
+      }// end while
     }// end else
    }// end function
   

@@ -11,26 +11,26 @@ void setup() {
   }
   
   ArrayList dfsAvgPathLength = new ArrayList<Float>();
-  ArrayList bfsAvgPathLength = new ArrayList<Float>();
+  ArrayList ucAvgPathLength = new ArrayList<Float>();
   ArrayList aStarAvgPathLength = new ArrayList<Float>();
   
   ArrayList dfsAvgRuntime = new ArrayList<Float>();
-  ArrayList bfsAvgRuntime = new ArrayList<Float>();
+  ArrayList ucAvgRuntime = new ArrayList<Float>();
   ArrayList aStarAvgRuntime = new ArrayList<Float>();
   
   float dfsPathLength = 0;
-  float bfsPathLength = 0;
+  float ucPathLength = 0;
   float aStarPathLength = 0;
   
   float dfsRuntime = 0;
-  float bfsRuntime = 0;
+  float ucRuntime = 0;
   float aStarRuntime = 0;
   
   /*
   float maxDfsPathLength = 0.0;
   float minDfsPathLength = 0.0;
-  float maxBfsPathLength = 0.0;
-  float minBfsPathLength = 0.0;
+  float maxUCPathLength = 0.0;
+  float minUCPathLength = 0.0;
   float maxAStarPathLength = 0.0;
   float minAStarPathLength = 0.0;
   */
@@ -40,97 +40,95 @@ void setup() {
   
   for (int j = 0; j < NUM_ITERATIONS; j++) {
       prm = new PRM(obstacles);
-      
-      prm.uniformCost();
-      prm.createAgentPath(prm.goalId, 3);
-    
+          
       // Run and time dfs path
       /*startTime = System.nanoTime();
       prm.dfs(prm.startId);
       endTime = System.nanoTime();
       prm.createAgentPath(prm.goalId, 0);
-      dfsAvgRuntime.add((float)((float)(endTime - startTime) / 1000));
+      dfsAvgRuntime.add((float)((float)(endTime - startTime) / 1000));*/
       
-      // Run and time bfs path
+      // Run and time uc path
       startTime = System.nanoTime();
-      prm.bfs(prm.startId);
+      prm.uniformCost();
       endTime = System.nanoTime();
-      prm.createAgentPath(prm.goalId, 1);
-      bfsAvgRuntime.add((float)((float)(endTime - startTime) / 1000));
+      prm.createAgentPath(prm.goalId, 3);
+      ucAvgRuntime.add((float)((float)(endTime - startTime) / 1000));
       
       // Run and time a* path
-      startTime = System.nanoTime();
+      /*startTime = System.nanoTime();
       prm.aStarSearch();
       endTime = System.nanoTime();
       prm.createAgentPath(prm.goalId, 2);
-      aStarAvgRuntime.add((float)((float)(endTime - startTime) / 1000));
+      aStarAvgRuntime.add((float)((float)(endTime - startTime) / 1000));*/
 
       // Calculate length of dfs path
-      pathLength = 0;
+      /*pathLength = 0;
       for (int i = 1; i < prm.agent.dfsPath.size(); i++) {
         pathLength += dist(prm.nodes.get(prm.agent.dfsPath.get(i - 1)).pos.x, prm.nodes.get(prm.agent.dfsPath.get(i - 1)).pos.y, 
              prm.nodes.get(prm.agent.dfsPath.get(i)).pos.x, prm.nodes.get(prm.agent.dfsPath.get(i)).pos.y);
       }
-      //println("DFS Path length: ", pathLength);
-      dfsAvgPathLength.add(pathLength);
+      dfsAvgPathLength.add(pathLength);*/
       
-      // Calculate length of bfs path
+      // Calculate length of uc path
       pathLength = 0;
-      for (int i = 1; i < prm.agent.bfsPath.size(); i++) {
-        pathLength += dist(prm.nodes.get(prm.agent.bfsPath.get(i - 1)).pos.x, prm.nodes.get(prm.agent.bfsPath.get(i - 1)).pos.y, 
-             prm.nodes.get(prm.agent.bfsPath.get(i)).pos.x, prm.nodes.get(prm.agent.bfsPath.get(i)).pos.y);
+      for (int i = 1; i < prm.agent.ucPath.size(); i++) {
+        pathLength += dist(prm.nodes.get(prm.agent.ucPath.get(i - 1)).pos.x, prm.nodes.get(prm.agent.ucPath.get(i - 1)).pos.y, 
+             prm.nodes.get(prm.agent.ucPath.get(i)).pos.x, prm.nodes.get(prm.agent.ucPath.get(i)).pos.y);
       }
-      bfsAvgPathLength.add(pathLength);
+      ucAvgPathLength.add(pathLength);
+    
+      println(prm.agent.ucPath);
     
       // Calculate length of aStar path
-      pathLength = 0;
+      /*pathLength = 0;
       for (int i = 1; i < prm.agent.aStarPath.size(); i++) {
         pathLength += dist(prm.nodes.get(prm.agent.aStarPath.get(i - 1)).pos.x, prm.nodes.get(prm.agent.aStarPath.get(i - 1)).pos.y, 
              prm.nodes.get(prm.agent.aStarPath.get(i)).pos.x, prm.nodes.get(prm.agent.aStarPath.get(i)).pos.y);
       }
-      aStarAvgPathLength.add(pathLength);
+      aStarAvgPathLength.add(pathLength);*/
       
-      prm.agent.dfsPath.clear();
-      prm.agent.bfsPath.clear();
-      prm.agent.aStarPath.clear();*/
+      //prm.agent.dfsPath.clear();
+      prm.agent.ucPath.clear();
+      //prm.agent.aStarPath.clear();
   }
   
-  /*for (int i = 0; i < NUM_ITERATIONS; i++) {
-    dfsPathLength = dfsPathLength + (float)dfsAvgPathLength.get(i);
-    bfsPathLength = bfsPathLength + (float)bfsAvgPathLength.get(i);
-    aStarPathLength = aStarPathLength + (float)aStarAvgPathLength.get(i); 
+  for (int i = 0; i < NUM_ITERATIONS; i++) {
+    //dfsPathLength = dfsPathLength + (float)dfsAvgPathLength.get(i);
+    ucPathLength = ucPathLength + (float)ucAvgPathLength.get(i);
+    //aStarPathLength = aStarPathLength + (float)aStarAvgPathLength.get(i); 
     
-    dfsRuntime = dfsRuntime + (float)dfsAvgRuntime.get(i);
-    bfsRuntime = bfsRuntime + (float)bfsAvgRuntime.get(i);
-    aStarRuntime = aStarRuntime + (float)aStarAvgRuntime.get(i);
-  }*/
-  println("PRM Avg DFS Path Length: ", dfsPathLength/NUM_ITERATIONS);
-  println("PRM Avg BFS Path Length: ", bfsPathLength/NUM_ITERATIONS);
-  println("PRM Avg A Star Path Length: ", aStarPathLength/NUM_ITERATIONS);
+    //dfsRuntime = dfsRuntime + (float)dfsAvgRuntime.get(i);
+    ucRuntime = ucRuntime + (float)ucAvgRuntime.get(i);
+    //aStarRuntime = aStarRuntime + (float)aStarAvgRuntime.get(i);
+  }
+  //println("PRM Avg DFS Path Length: ", dfsPathLength/NUM_ITERATIONS);
+  println("PRM Avg UC Path Length: ", ucPathLength/NUM_ITERATIONS);
+  //println("PRM Avg A Star Path Length: ", aStarPathLength/NUM_ITERATIONS);
   println();
-  println("PRM Avg DFS Runtime: ", dfsRuntime/NUM_ITERATIONS);
-  println("PRM Avg BFS Runtime: ", bfsRuntime/NUM_ITERATIONS);
-  println("PRM Avg A Star Runtime: ", aStarRuntime/NUM_ITERATIONS);
+  //println("PRM Avg DFS Runtime: ", dfsRuntime/NUM_ITERATIONS);
+  println("PRM Avg UC Runtime: ", ucRuntime/NUM_ITERATIONS);
+  //println("PRM Avg A Star Runtime: ", aStarRuntime/NUM_ITERATIONS);
   println();
   
   /***********************************************************************/
   // RRT
   /***********************************************************************/
-  
-  /*dfsAvgPathLength.clear();
-  bfsAvgPathLength.clear();
+  /*
+  dfsAvgPathLength.clear();
+  ucAvgPathLength.clear();
   aStarAvgPathLength.clear();
   
   dfsAvgRuntime.clear();
-  bfsAvgRuntime.clear();
+  ucAvgRuntime.clear();
   aStarAvgRuntime.clear();
   
   dfsPathLength = 0;
-  bfsPathLength = 0;
+  ucPathLength = 0;
   aStarPathLength = 0;
   
   dfsRuntime = 0;
-  bfsRuntime = 0;
+  ucRuntime = 0;
   aStarRuntime = 0;
   
     for (int j = 0; j < NUM_ITERATIONS; j++) {
@@ -143,12 +141,12 @@ void setup() {
       rrt.createAgentPath(rrt.goalId, 0);
       dfsAvgRuntime.add((float)((float)(endTime - startTime) / 1000));
       
-      // Run and time bfs path
+      // Run and time uc path
       startTime = System.nanoTime();
-      rrt.bfs(rrt.startId);
+      rrt.uniformCost();
       endTime = System.nanoTime();
-      rrt.createAgentPath(rrt.goalId, 1);
-      bfsAvgRuntime.add((float)((float)(endTime - startTime) / 1000));
+      rrt.createAgentPath(rrt.goalId, 3);
+      ucAvgRuntime.add((float)((float)(endTime - startTime) / 1000));
       
       // Run and time a* path
       startTime = System.nanoTime();
@@ -163,21 +161,16 @@ void setup() {
         pathLength += dist(rrt.nodes.get(rrt.agent.dfsPath.get(i - 1)).pos.x, rrt.nodes.get(rrt.agent.dfsPath.get(i - 1)).pos.y, 
              rrt.nodes.get(rrt.agent.dfsPath.get(i)).pos.x, rrt.nodes.get(rrt.agent.dfsPath.get(i)).pos.y);
       }
-      //println("DFS Path length: ", pathLength);
+      
       dfsAvgPathLength.add(pathLength);
       
-      // Calculate length of bfs path
+      // Calculate length of uc path
       pathLength = 0;
-      for (int i = 1; i < rrt.agent.bfsPath.size(); i++) {
-        //println(pathLength);
-        pathLength += dist(rrt.nodes.get(rrt.agent.bfsPath.get(i - 1)).pos.x, rrt.nodes.get(rrt.agent.bfsPath.get(i - 1)).pos.y, 
-             rrt.nodes.get(rrt.agent.bfsPath.get(i)).pos.x, rrt.nodes.get(rrt.agent.bfsPath.get(i)).pos.y);
-      }
-      //println(rrt.agent.bfsPath);
-      //println(rrt.agent.dfsPath);
-      //println(pathLength);
-      bfsAvgPathLength.add(pathLength);
-      //rrt.printNodeInfo();
+      for (int i = 1; i < rrt.agent.ucPath.size(); i++) {
+        pathLength += dist(rrt.nodes.get(rrt.agent.ucPath.get(i - 1)).pos.x, rrt.nodes.get(rrt.agent.ucPath.get(i - 1)).pos.y, 
+             rrt.nodes.get(rrt.agent.ucPath.get(i)).pos.x, rrt.nodes.get(rrt.agent.ucPath.get(i)).pos.y);
+      }     
+      ucAvgPathLength.add(pathLength);
       
       // Calculate length of aStar path
       pathLength = 0;
@@ -187,35 +180,29 @@ void setup() {
       }
       aStarAvgPathLength.add(pathLength);
       
-      
-      
       rrt.agent.dfsPath.clear();
-      rrt.agent.bfsPath.clear();
-      rrt.agent.aStarPath.clear();
-      
-  }*/
+      rrt.agent.ucPath.clear();
+      rrt.agent.aStarPath.clear();   
+  }
   
   for (int i = 0; i < NUM_ITERATIONS; i++) {
-    /*dfsPathLength = dfsPathLength + (float)dfsAvgPathLength.get(i);
-    bfsPathLength = bfsPathLength + (float)bfsAvgPathLength.get(i);
+    dfsPathLength = dfsPathLength + (float)dfsAvgPathLength.get(i);
+    ucPathLength = ucPathLength + (float)ucAvgPathLength.get(i);
     aStarPathLength = aStarPathLength + (float)aStarAvgPathLength.get(i); 
     
     dfsRuntime = dfsRuntime + (float)dfsAvgRuntime.get(i);
-    bfsRuntime = bfsRuntime + (float)bfsAvgRuntime.get(i);
-    aStarRuntime = aStarRuntime + (float)aStarAvgRuntime.get(i);
-    
-    //println("bfsAvgPathLength: ", (float)bfsAvgPathLength.get(i));*/
-    
+    ucRuntime = ucRuntime + (float)ucAvgRuntime.get(i);
+    aStarRuntime = aStarRuntime + (float)aStarAvgRuntime.get(i);    
   }
-  println(prm.agent.ucPath);
   
-  //println("RRT Avg DFS Path Length: ", dfsPathLength/NUM_ITERATIONS);
-  //println("RRT Avg BFS Path Length: ", bfsPathLength/NUM_ITERATIONS);
-  //println("RRT Avg A Star Path Length: ", aStarPathLength/NUM_ITERATIONS);
-  //println();
-  //println("RRT Avg DFS Runtime: ", dfsRuntime/NUM_ITERATIONS);
-  //println("RRT Avg BFS Runtime: ", bfsRuntime/NUM_ITERATIONS);
-  //println("RRT Avg A Star Runtime: ", aStarRuntime/NUM_ITERATIONS);
+  println("RRT Avg DFS Path Length: ", dfsPathLength/NUM_ITERATIONS);
+  println("RRT Avg UC Path Length: ", ucPathLength/NUM_ITERATIONS);
+  println("RRT Avg A Star Path Length: ", aStarPathLength/NUM_ITERATIONS);
+  println();
+  println("RRT Avg DFS Runtime: ", dfsRuntime/NUM_ITERATIONS);
+  println("RRT Avg UC Runtime: ", ucRuntime/NUM_ITERATIONS);
+  println("RRT Avg A Star Runtime: ", aStarRuntime/NUM_ITERATIONS);  
+  */
 }
 
 void draw() {
