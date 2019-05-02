@@ -9,7 +9,7 @@ final int MAX_OBS_RADIUS = 25;
 final int DELTA = 400;
 final int ITER = 20;
 
-final int NUM_ITERATIONS = 50;
+final int NUM_ITERATIONS = 1;
 
 // Agents/obstacles
 final int SPOS_X = 50;

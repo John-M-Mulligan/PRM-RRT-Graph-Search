@@ -29,6 +29,7 @@ class Agent extends Entity {
     aStarPath = new ArrayList<Integer>();
     dfsPath = new ArrayList<Integer>();
     bfsPath = new ArrayList<Integer>();
+    ucPath = new ArrayList<Integer>();
     pos = new PVector(x, y);
     radius = r;
   }
@@ -36,6 +37,7 @@ class Agent extends Entity {
   ArrayList<Integer> aStarPath;
   ArrayList<Integer> dfsPath;
   ArrayList<Integer> bfsPath;
+  ArrayList<Integer> ucPath;
 
   
 }

@@ -89,6 +89,7 @@ class PRM {
     Stack<Integer> temp = new Stack<Integer>();
     int id = goalId;
     while (id != -1) {
+      //println(id);
       temp.push(id);
       id = nodes.get(id).parentId;
     }// end while
@@ -100,11 +101,15 @@ class PRM {
       while (!temp.empty()) {
         agent.bfsPath.add(temp.pop());
       }// end while
+    } else if (searchType == 2){
+      while (!temp.empty()) {
+        agent.aStarPath.add(temp.pop());
+      }// end while
     } else {
-        while (!temp.empty()) {
-          agent.aStarPath.add(temp.pop());
-        }// end while
-      }// end else
+      while (!temp.empty()) {
+        agent.ucPath.add(temp.pop());
+      }
+    }// end else
    }// end function
   
   // DISPLAY
@@ -278,7 +283,58 @@ class PRM {
         }
         parent = currentId;
     } 
-  } 
+  }
+  
+  void uniformCost() {
+    nodes.get(startId).f = 0;
+    PriorityQueue<Node> q = new PriorityQueue<Node>(nodes.size(),
+      new Comparator<Node>() {
+        // override compare method
+        public int compare(Node i, Node j) {
+          if (i.f > j.f) {
+            return 1;
+          } else if (i.f < j.f) {
+            return -1;
+          } else {
+            return 0;
+          }
+        }
+      }
+    );
+  
+    q.add(nodes.get(startId));
+    Set<Node> explored = new HashSet<Node>();
+    //boolean found = false;
+    
+    // while frontier is not empty
+    do {
+      Node current = q.poll();
+      explored.add(current);
+      
+      //if (current.id == goalId) {
+      //  found = true;
+      //}
+      
+      for (int i : current.adj) {
+        Node neighbor = nodes.get(i);
+        neighbor.f = current.f + dist(neighbor.pos.x, neighbor.pos.y, current.pos.x, current.pos.y);
+        
+        if (!explored.contains(neighbor) && !q.contains(neighbor)) {
+          neighbor.parentId = current.id;
+          q.add(neighbor);
+          
+          //println(neighbor.id);
+          //println(q);
+        } else if (q.contains(neighbor) && neighbor.f > current.f) {
+          neighbor.parentId = current.id;
+          
+          // next two calls decrease the key of the node in the queue
+          q.remove(neighbor);
+          q.add(neighbor);
+        }
+      }
+    } while (!q.isEmpty());
+  }
   
   int startId, goalId;
   
