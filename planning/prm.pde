@@ -89,7 +89,6 @@ class PRM {
     Stack<Integer> temp = new Stack<Integer>();
     int id = goalId;
     while (id != -1) {
-      //println(id);
       temp.push(id);
       id = nodes.get(id).parentId;
     }// end while
@@ -227,6 +226,7 @@ class PRM {
                     }// end else if
             } // end for
     } // end while
+    nodes.get(startId).parentId = -1;
 } // end A star    
 
   

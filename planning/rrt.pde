@@ -25,8 +25,8 @@ class RRT {
         //posY = GPOS_Y;
       //} else {
         while (!validNode) {
-          posX = random(SPOS_X+DELTA, GPOS_X-DELTA);
-          posY = random(SPOS_Y+DELTA, GPOS_Y-DELTA);
+          posX = random(SPOS_X+DELTA/2, GPOS_X-DELTA/2);
+          posY = random(SPOS_Y+DELTA/2, GPOS_Y-DELTA/2);
           for (int j = 0; !validNode && j < obstacles.size(); j++) {
             dist = dist(posX, posY, obstacles.get(j).pos.x, obstacles.get(j).pos.y);
             if (dist > obstacles.get(j).radius + agent.radius) {
@@ -176,8 +176,8 @@ class RRT {
           strokeWeight(3);
           stroke(0, 0, 180);
         } else {
-          strokeWeight(1);
-          stroke(255, 128);
+          strokeWeight(3);
+          stroke(255);
         }
         line(nodes.get(i).pos.x, nodes.get(i).pos.y,
           nodes.get(id).pos.x, nodes.get(id).pos.y);
